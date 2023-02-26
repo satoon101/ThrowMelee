@@ -45,6 +45,7 @@ _marked_for_removal = set()
 @ClientCommand('drop')
 def _drop_command(command, index):
     """Throw melee weapon on 'drop'."""
+    # pylint: disable=inconsistent-return-statements
     player = Player(index)
     class_name = getattr(player.active_weapon, 'classname', None)
     if class_name not in _melee_weapons:

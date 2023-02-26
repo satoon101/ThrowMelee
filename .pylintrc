@@ -60,4 +60,4 @@ ignore-docstrings=yes
 
 
 [VARIABLES]
-dummy-variables-rgx=command|game_event
+ignored-argument-names=command
