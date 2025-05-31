@@ -28,11 +28,10 @@ from weapons.entity import Weapon
 from .config import allow_pickup, melee_damage, remove_delay, total_max
 from .strings import MESSAGE_STRINGS
 
-
 # =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
-_melee_weapons = [weapon.name for weapon in WeaponClassIter('melee')]
+_melee_weapons = [weapon.name for weapon in WeaponClassIter("melee")]
 
 _available_count = defaultdict(int)
 _throwers = {}
@@ -42,21 +41,20 @@ _marked_for_removal = set()
 # =============================================================================
 # >> CLIENT COMMANDS
 # =============================================================================
-@ClientCommand('drop')
+@ClientCommand("drop")
 def _drop_command(command, index):
     """Throw melee weapon on 'drop'."""
-    # pylint: disable=inconsistent-return-statements
     player = Player(index)
-    class_name = getattr(player.active_weapon, 'classname', None)
+    class_name = getattr(player.active_weapon, "classname", None)
     if class_name not in _melee_weapons:
         return True
 
     if not _available_count[player.userid]:
-        TextMsg(MESSAGE_STRINGS['Empty']).send(index)
-        return
+        TextMsg(MESSAGE_STRINGS["Empty"]).send(index)
+        return None
 
     _available_count[player.userid] -= 1
-    TextMsg(MESSAGE_STRINGS['Remaining']).send(
+    TextMsg(MESSAGE_STRINGS["Remaining"]).send(
         index,
         current=_available_count[player.userid],
         total=int(total_max),
@@ -76,8 +74,8 @@ def _drop_command(command, index):
 # =============================================================================
 # >> ENTITY HOOKS
 # =============================================================================
-@EntityPreHook(EntityCondition.is_bot_player, 'bump_weapon')
-@EntityPreHook(EntityCondition.is_human_player, 'bump_weapon')
+@EntityPreHook(EntityCondition.is_bot_player, "bump_weapon")
+@EntityPreHook(EntityCondition.is_human_player, "bump_weapon")
 def _pre_bump_weapon(stack_data):
     """Damage player or give extra if bump is from thrown weapon."""
     weapon = make_object(Entity, stack_data[1])
@@ -116,24 +114,24 @@ def _pre_bump_weapon(stack_data):
     if not bool(allow_pickup):
         return
 
-    TextMsg(MESSAGE_STRINGS['Gained']).send(player.index)
+    TextMsg(MESSAGE_STRINGS["Gained"]).send(player.index)
     _available_count[player.userid] += 1
 
 
 # =============================================================================
 # >> GAME EVENTS
 # =============================================================================
-@Event('player_spawn')
+@Event("player_spawn")
 def _reset_count_on_spawn(game_event):
     """Reset the player's count."""
-    _available_count[game_event['userid']] = int(total_max)
+    _available_count[game_event["userid"]] = int(total_max)
 
 
-@Event('player_activate')
+@Event("player_activate")
 def _send_advert_on_connect(game_event):
     """Send a message about the plugin."""
-    SayText2(MESSAGE_STRINGS['Advert']).send(
-        index_from_userid(game_event['userid'])
+    SayText2(MESSAGE_STRINGS["Advert"]).send(
+        index_from_userid(game_event["userid"]),
     )
 
 
@@ -147,5 +145,4 @@ def _remove_index_from_throwers(base_entity):
         return
 
     index = base_entity.index
-    if index in _throwers:
-        del _throwers[index]
+    _throwers.pop(index, None)
