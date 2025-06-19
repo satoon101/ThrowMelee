@@ -1,6 +1,6 @@
 # ../throw_melee/throw_melee.py
 
-"""."""
+"""Plugin that allows throwing knives (melee weapons) at enemies."""
 
 # =============================================================================
 # >> IMPORTS
@@ -69,6 +69,7 @@ def _drop_command(command, index):
 
     delay = int(remove_delay)
     weapon.delay(delay, weapon.remove)
+    return None
 
 
 # =============================================================================

@@ -1,6 +1,6 @@
 # ../throw_melee/strings.py
 
-"""."""
+"""Creates server configuration and user settings."""
 
 # =============================================================================
 # >> IMPORTS

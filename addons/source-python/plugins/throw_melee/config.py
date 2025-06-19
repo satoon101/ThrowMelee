@@ -1,6 +1,6 @@
 # ../throw_melee/config.py
 
-"""."""
+"""Contains all translation variables for the plugin."""
 
 # =============================================================================
 # >> IMPORTS
